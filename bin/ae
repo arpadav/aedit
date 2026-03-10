@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+#
+# ae - aedit launcher
+#
+# Usage:
+#   ae [PATH]      open a file or directory
+#
+# Author: aav
+# --------------------------------------------------
+set -euo pipefail
+
+# --------------------------------------------------
+# inputs
+# --------------------------------------------------
+LAYOUT="${XDG_CONFIG_HOME:-$HOME/.config}/zellij/layouts/aedit.kdl"
+
+# --------------------------------------------------
+# check for the `aedit` layout
+# --------------------------------------------------
+if [[ ! -f "${LAYOUT}" ]]; then
+    echo "ae: layout not found at ${LAYOUT}" >&2
+    echo "    Ensure your nix/home-manager config provides zellijLayout." >&2
+    exit 1
+fi
+
+# --------------------------------------------------
+# input args
+# --------------------------------------------------
+case "${1:-}" in
+    -h | --help)
+        echo "Usage: ae [PATH]"
+        exit 0
+        ;;
+esac
+
+# --------------------------------------------------
+# parse out target path
+# --------------------------------------------------
+TARGET="${1:-.}"
+TARGET="$(realpath "${TARGET}" 2>/dev/null || echo "${TARGET}")"
+if [[ -f "${TARGET}" ]]; then
+    export AEDIT_FILE="${TARGET}"
+    export AEDIT_FOLDER="$(dirname "${TARGET}")"
+elif [[ -d "${TARGET}" ]]; then
+    export AEDIT_FILE=""
+    export AEDIT_FOLDER="${TARGET}"
+else
+    echo "ae: '${TARGET}' is not a valid file or directory" >&2
+    exit 1
+fi
+
+# --------------------------------------------------
+# exec
+# --------------------------------------------------
+exec zellij --new-session-with-layout "$LAYOUT" -s "aedit-$(basename "${AEDIT_FOLDER}")-$$"

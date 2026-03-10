@@ -6,6 +6,20 @@ let
   # --------------------------------------------------
   cfg = config.programs.aedit;
   # --------------------------------------------------
+  # aedit scripts package
+  # --------------------------------------------------
+  aeditScripts = pkgs.stdenvNoCC.mkDerivation {
+    name = "aedit-scripts";
+    src = ./bin;
+    dontBuild = true;
+    installPhase = ''
+      mkdir -p $out/bin
+      for f in ae aedit-hx-open.sh aedit-broot-start.sh aedit-hx-start.sh; do
+        install -m755 "$f" $out/bin/
+      done
+    '';
+  };
+  # --------------------------------------------------
   # open from `broot` into `helix` using `aedit`
   # --------------------------------------------------
   defaultBrootVerbs = [
@@ -14,7 +28,7 @@ let
       key = "enter";
       apply_to = "file";
       leave_broot = false;
-      execution = "aedit-hx-open {file} {line}";
+      execution = "aedit-hx-open.sh {file} {line}";
     }
   ];
 in
@@ -70,6 +84,14 @@ in
       default = [];
       description = "List of `broot` config files to import";
     };
+    # --------------------------------------------------
+    # zellij layout
+    # --------------------------------------------------
+    zellijLayout = lib.mkOption {
+      type = lib.types.nullOr lib.types.path;
+      default = ./aedit-layout.kdl;
+      description = "Path to the zellij layout file for aedit";
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -116,49 +138,37 @@ in
         imports = importBrootCfgFiles ;
       };
     };
-    # # --------------------------------------------------
-    # # aedit packages
-    # # --------------------------------------------------
-    # home.packages = with pkgs; [
-    #   broot
-    #   helix
-    #   zellij
-    # ];
+    # --------------------------------------------------
+    # aedit scripts on PATH
+    # --------------------------------------------------
+    home.packages = [ aeditScripts ];
+    # --------------------------------------------------
+    # config files
+    # --------------------------------------------------
+    xdg.configFile =
+      builtins.listToAttrs (map (path: {
+        name = "broot/${builtins.baseNameOf path}";
+        value = { source = path; };
+      }) cfg.brootCfgFiles)
+
+      //
+
+      lib.optionalAttrs (cfg.zellijLayout != null) {
+        "zellij/layouts/aedit.kdl".source = cfg.zellijLayout;
+      }
+
+      //
+
+      lib.optionalAttrs (cfg.helixCfgFile != null) {
+        "helix/config.toml".source = cfg.helixCfgFile;
+      }
+
+      //
+
+      lib.optionalAttrs (cfg.helixLangFile != null) {
+        "helix/languages.toml".source = cfg.helixLangFile;
+      }
+
+      ;
   };
-
-  # --------------------------------------------------
-  # config files
-  # --------------------------------------------------
-  xdg.configFile =
-    builtins.listToAttrs (map (path: {
-      name = "broot/${builtins.baseNameOf path}";
-      value = { source = path; };
-    }) cfg.brootCfgFiles)
-
-    //
-
-    lib.optionalAttrs (cfg.helixCfgFile != null) {
-      "helix/config.toml".source = cfg.helixCfgFile;
-    }
-
-    //
-
-    lib.optionalAttrs (cfg.helixLangFile != null) {
-      "helix/languages.toml".source = cfg.helixLangFile;
-    }
-
-    ;
-
-  # # --------------------------------------------------
-  # # configs? not aedit, but personal to me arpad
-  # # --------------------------------------------------
-  # home.file = {
-  #   ".bash_functions".source = ./dotfiles/.bash_functions;
-  #   ".config/helix/config.toml".source = ./dotfiles/helix-config.toml;
-  #   ".config/helix/languages.toml".source = ./dotfiles/helix-languages.toml;
-  #   ".config/zellij/config.kdl".source = ./dotfiles/zellij-config.kdl;
-  #   ".config/zellij/layouts/aedit.kdl".source = ./dotfiles/zellij-layout.kdl;
-  #   ".config/broot/conf.hjson".source = ./dotfiles/broot-conf.hjson;
-  #   ".config/broot/verbs.hjson".source = ./dotfiles/broot-verbs.hjson;
-  # };
 }
