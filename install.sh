@@ -37,5 +37,7 @@ step "Installing aedit"
 nix run home-manager/master -- switch \
     --flake "github:arpadav/aedit?ref=preparing-for-release&dir=headless#headless" \
     --impure \
-    --extra-experimental-features "nix-command flakes" \
-    2>&1 | tail -1
+    --no-write-lock-file \
+    --extra-experimental-features "nix-command flakes"
+# --extra-experimental-features "nix-command flakes" \
+# 2>&1 | tail -1
