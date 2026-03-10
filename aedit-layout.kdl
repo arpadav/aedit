@@ -18,11 +18,7 @@ layout {
     }
 
     pane split_direction="vertical" {
-        pane size="20%" command="aedit-broot-start"
-        pane size="80%" command="aedit-hx-start"
+        pane size="20%" command="aedit-broot-start.sh"
+        pane size="80%" command="aedit-hx-start.sh"
     }
-
-    // pane size=2 borderless=true {
-    //     plugin location="zellij:status-bar"
-    // }
 }
