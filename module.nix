@@ -85,6 +85,22 @@ in
       description = "List of `broot` config files to import";
     };
     # --------------------------------------------------
+    # https://nix-community.github.io/home-manager/options.xhtml#opt-programs.zellij.settings
+    # --------------------------------------------------
+    zellijCfg = lib.mkOption {
+      type = lib.types.nullOr lib.types.attrs;
+      default = null;
+      description = "Additional zellij settings (config.kdl)";
+    };
+    # --------------------------------------------------
+    # https://zellij.dev/documentation/configuration
+    # --------------------------------------------------
+    zellijCfgFile = lib.mkOption {
+      type = lib.types.nullOr lib.types.path;
+      default = null;
+      description = "Path to zellij config file";
+    };
+    # --------------------------------------------------
     # zellij layout
     # --------------------------------------------------
     zellijLayout = lib.mkOption {
@@ -107,6 +123,10 @@ in
         assertion = !(cfg.helixLang != null && cfg.helixLangFile != null);
         message = "programs.aedit: helixLang and helixLangFile are mutually exclusive.";
       }
+      {
+        assertion = !(cfg.zellijCfg != null && cfg.zellijCfgFile != null);
+        message = "programs.aedit: zellijCfg and zellijCfgFile are mutually exclusive.";
+      }
     ];
     # --------------------------------------------------
     # add user `helix` config
@@ -122,6 +142,7 @@ in
     # --------------------------------------------------
     programs.zellij = {
       enable = true;
+      settings = lib.mkIf (cfg.zellijCfg != null) cfg.zellijCfg;
     };
     # --------------------------------------------------
     # merge broot verbs to enable opening with `aedit`
@@ -150,6 +171,12 @@ in
         name = "broot/${builtins.baseNameOf path}";
         value = { source = path; };
       }) cfg.brootCfgFiles)
+
+      //
+
+      lib.optionalAttrs (cfg.zellijCfgFile != null) {
+        "zellij/config.kdl".source = cfg.zellijCfgFile;
+      }
 
       //
 
