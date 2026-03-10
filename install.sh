@@ -21,6 +21,6 @@ fi
 # apply aedit via home-manager
 # --------------------------------------------------
 nix run home-manager/master -- switch \
-    --flake "github:arpadav/aedit?dir=headless#headless" \
+    --flake "github:arpadav/aedit?ref=preparing-for-release?dir=headless#headless" \
     --impure \
     --extra-experimental-features "nix-command flakes"
