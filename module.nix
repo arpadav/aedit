@@ -48,7 +48,7 @@ in
     # https://docs.helix-editor.com/configuration.html
     # --------------------------------------------------
     helixCfgFile = lib.mkOption {
-      type = lib.types.nullOr lib.types.attrs;
+      type = lib.types.nullOr lib.types.path;
       default = null;
       description = "Path to Helix config file";
     };
@@ -64,7 +64,7 @@ in
     # https://docs.helix-editor.com/languages.html
     # --------------------------------------------------
     helixLangFile = lib.mkOption {
-      type = lib.types.nullOr lib.types.attrs;
+      type = lib.types.nullOr lib.types.path;
       default = null;
       description = "Path to Helix languages file";
     };
