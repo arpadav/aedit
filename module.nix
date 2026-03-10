@@ -8,6 +8,43 @@ let
   # --------------------------------------------------
   # aedit scripts package
   # --------------------------------------------------
+  # --------------------------------------------------
+  # generated zellij layout with configurable pane sizes
+  # --------------------------------------------------
+  generatedLayout = pkgs.writeText "aedit-layout.kdl" ''
+    // aedit zellij layout
+    //
+    // WARNING: It is not recommended to replace this layout file directly.
+    // The panes use custom commands (aedit-broot-start.sh and aedit-hx-start.sh)
+    // that are required for aedit to function. To adjust pane sizes, use the
+    // `brootPaneSize` and `helixPaneSize` Nix options instead.
+    //
+    // Left pane (${toString cfg.brootPaneSize}%): broot file picker
+    // Right pane (${toString cfg.helixPaneSize}%): helix editor
+    //
+    // Author: aav
+    // --------------------------------------------------
+
+    default_layout "compact"
+
+    session_serialization false
+
+    layout {
+        pane size=1 borderless=true {
+            plugin location="zellij:tab-bar"
+        }
+
+        pane split_direction="vertical" {
+            pane size="${toString cfg.brootPaneSize}%" command="aedit-broot-start.sh"
+            pane size="${toString cfg.helixPaneSize}%" command="aedit-hx-start.sh"
+        }
+    }
+  '';
+  # --------------------------------------------------
+  # resolved layout: custom or generated
+  # --------------------------------------------------
+  resolvedLayout = if cfg.zellijLayout != null then cfg.zellijLayout else generatedLayout;
+  # --------------------------------------------------
   aeditScripts = pkgs.stdenvNoCC.mkDerivation {
     name = "aedit-scripts";
     src = ./bin;
@@ -105,8 +142,21 @@ in
     # --------------------------------------------------
     zellijLayout = lib.mkOption {
       type = lib.types.nullOr lib.types.path;
-      default = ./aedit-layout.kdl;
-      description = "Path to the zellij layout file for aedit";
+      default = null;
+      description = "Path to a custom zellij layout file for aedit. Not recommended -- the default layout uses custom pane commands (aedit-broot-start.sh, aedit-hx-start.sh) required for aedit to function. Use brootPaneSize and helixPaneSize to adjust the split instead.";
+    };
+    # --------------------------------------------------
+    # pane sizes
+    # --------------------------------------------------
+    brootPaneSize = lib.mkOption {
+      type = lib.types.int;
+      default = 20;
+      description = "Broot (left) pane width as a percentage";
+    };
+    helixPaneSize = lib.mkOption {
+      type = lib.types.int;
+      default = 80;
+      description = "Helix (right) pane width as a percentage";
     };
   };
 
@@ -180,8 +230,8 @@ in
 
       //
 
-      lib.optionalAttrs (cfg.zellijLayout != null) {
-        "zellij/layouts/aedit.kdl".source = cfg.zellijLayout;
+      {
+        "zellij/layouts/aedit.kdl".source = resolvedLayout;
       }
 
       //
