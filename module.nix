@@ -6,9 +6,6 @@ let
   # --------------------------------------------------
   cfg = config.programs.aedit;
   # --------------------------------------------------
-  # aedit scripts package
-  # --------------------------------------------------
-  # --------------------------------------------------
   # generated zellij layout with configurable pane sizes
   # --------------------------------------------------
   generatedLayout = pkgs.writeText "aedit-layout.kdl" ''
@@ -44,6 +41,8 @@ let
   # resolved layout: custom or generated
   # --------------------------------------------------
   resolvedLayout = if cfg.zellijLayout != null then cfg.zellijLayout else generatedLayout;
+  # --------------------------------------------------
+  # aedit scripts package
   # --------------------------------------------------
   aeditScripts = pkgs.stdenvNoCC.mkDerivation {
     name = "aedit-scripts";
