@@ -12,7 +12,7 @@ let
     // aedit zellij layout
     //
     // WARNING: It is not recommended to replace this layout file directly.
-    // The panes use custom commands (aedit-broot-start.sh and aedit-hx-start.sh)
+    // The panes use custom commands (aedit-broot-start and aedit-hx-start)
     // that are required for aedit to function. To adjust pane sizes, use the
     // `brootPaneSize` and `helixPaneSize` Nix options instead.
     //
@@ -21,19 +21,16 @@ let
     //
     // Author: aav
     // --------------------------------------------------
-
+    show_startup_tips false
     default_layout "compact"
-
     session_serialization false
-
     layout {
         pane size=1 borderless=true {
             plugin location="zellij:tab-bar"
         }
-
         pane split_direction="vertical" {
-            pane size="${toString cfg.brootPaneSize}%" command="aedit-broot-start.sh"
-            pane size="${toString cfg.helixPaneSize}%" command="aedit-hx-start.sh"
+            pane size="${toString cfg.brootPaneSize}%" command="aedit-broot-start"
+            pane size="${toString cfg.helixPaneSize}%" command="aedit-hx-start"
         }
     }
   '';
@@ -50,7 +47,7 @@ let
     dontBuild = true;
     installPhase = ''
       mkdir -p $out/bin
-      for f in ae aedit-hx-open.sh aedit-broot-start.sh aedit-hx-start.sh; do
+      for f in ae aedit-hx-open aedit-broot-start aedit-hx-start; do
         install -m755 "$f" $out/bin/
       done
     '';
@@ -64,7 +61,7 @@ let
       key = "enter";
       apply_to = "file";
       leave_broot = false;
-      execution = "aedit-hx-open.sh {file} {line}";
+      execution = "aedit-hx-open {file} {line}";
     }
   ];
 in
@@ -142,7 +139,7 @@ in
     zellijLayout = lib.mkOption {
       type = lib.types.nullOr lib.types.path;
       default = null;
-      description = "Path to a custom zellij layout file for aedit. Not recommended -- the default layout uses custom pane commands (aedit-broot-start.sh, aedit-hx-start.sh) required for aedit to function. Use brootPaneSize and helixPaneSize to adjust the split instead.";
+      description = "Path to a custom zellij layout file for aedit. Not recommended -- the default layout uses custom pane commands (aedit-broot-start, aedit-hx-start) required for aedit to function. Use brootPaneSize and helixPaneSize to adjust the split instead.";
     };
     # --------------------------------------------------
     # pane sizes

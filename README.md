@@ -221,7 +221,7 @@ programs.aedit.zellijCfgFile = ./zellij/config.kdl;
 
 #### `zellijLayout`
 
-Path to a custom zellij layout file. **Not recommended** -- the default layout uses custom pane commands (`aedit-broot-start.sh` and `aedit-hx-start.sh`) that are required for aedit to function. If you override this, your layout must invoke those same commands or aedit will not work correctly. To adjust pane sizes, use `brootPaneSize` and `helixPaneSize` instead.
+Path to a custom zellij layout file. **Not recommended** -- the default layout uses custom pane commands (`aedit-broot-start` and `aedit-hx-start`) that are required for aedit to function. If you override this, your layout must invoke those same commands or aedit will not work correctly. To adjust pane sizes, use `brootPaneSize` and `helixPaneSize` instead.
 
 - Type: `nullOr path`
 - Default: `null` (a layout is generated automatically)

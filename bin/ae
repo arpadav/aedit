@@ -19,7 +19,7 @@ LAYOUT="${XDG_CONFIG_HOME:-$HOME/.config}/zellij/layouts/aedit.kdl"
 # --------------------------------------------------
 if [[ ! -f "${LAYOUT}" ]]; then
     echo "ae: layout not found at ${LAYOUT}" >&2
-    echo "    Ensure your nix/home-manager config provides zellijLayout." >&2
+    echo "    Ensure your nix/home-manager config provides \`zellijLayout\`." >&2
     exit 1
 fi
 
@@ -52,4 +52,4 @@ fi
 # --------------------------------------------------
 # exec
 # --------------------------------------------------
-exec zellij --new-session-with-layout "$LAYOUT" -s "aedit-$(basename "${AEDIT_FOLDER}")-$$"
+exec zellij --new-session-with-layout "$LAYOUT" -s "aedit-$(basename "${AEDIT_FOLDER}")-$$" >/dev/null 2>&1
