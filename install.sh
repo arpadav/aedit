@@ -13,8 +13,8 @@ set -eu
 # install nix if not present
 # --------------------------------------------------
 if ! command -v nix >/dev/null 2>&1; then
-    curl -L https://nixos.org/nix/install | sh -s -- --daemon --yes
-    . '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh'
+    curl -L https://nixos.org/nix/install | sh -s -- --no-daemon --yes
+    . "$HOME/.nix-profile/etc/profile.d/nix.sh"
 fi
 
 # --------------------------------------------------
