@@ -28,7 +28,7 @@ fi
 # --------------------------------------------------
 case "${1:-}" in
     -h | --help)
-        echo "Usage: ae [PATH]"
+        echo "Usage: ae [PATH] - open a file or a directory"
         exit 0
         ;;
 esac

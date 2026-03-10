@@ -10,7 +10,7 @@
 set -eu
 NIX_SH="$HOME/.nix-profile/etc/profile.d/nix.sh"
 step() {
-    printf "\033[1;34m=>\033[0m %s...\n" "$1"
+    printf "\t\033[1;34m=>\033[0m %s...\n" "$1"
 }
 
 # --------------------------------------------------
@@ -31,13 +31,24 @@ if ! command -v nix >/dev/null 2>&1; then
 fi
 
 # --------------------------------------------------
-# apply aedit via home-manager
+# install aedit
 # --------------------------------------------------
-step "Installing aedit"
+step "Installing aedit..."
 nix run home-manager/master -- switch \
     --flake "github:arpadav/aedit?ref=preparing-for-release&dir=headless#headless" \
     --impure \
     --no-write-lock-file \
     --extra-experimental-features "nix-command flakes"
-# --extra-experimental-features "nix-command flakes" \
-# 2>&1 | tail -1
+
+# --------------------------------------------------
+# apply env
+# --------------------------------------------------
+step "Appying env..."
+. ~/.profile 2>&1
+broot --install 2>&1
+
+# --------------------------------------------------
+# done! print usage
+# --------------------------------------------------
+step "Done!"
+exec ae --help
