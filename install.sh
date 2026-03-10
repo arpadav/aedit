@@ -55,7 +55,7 @@ logbox nix run home-manager/master -- switch \
 # apply env
 # --------------------------------------------------
 step "Appying env..."
-. ~/.profile 2>&1
+source ~/.profile 2>&1
 broot --install 2>&1
 
 # --------------------------------------------------

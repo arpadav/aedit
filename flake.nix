@@ -1,5 +1,5 @@
 {
-  description = "aedit (ae) - arpad editor flake";
+  description = "aedit (ae) - arpad editor flake/module";
   # --------------------------------------------------
   # nix packages
   # --------------------------------------------------

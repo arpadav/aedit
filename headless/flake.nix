@@ -1,6 +1,8 @@
 {
-  description = "aedit headless install";
-
+  description = "aedit (ae) - arpad editor headless flake";
+  # --------------------------------------------------
+  # nix packages
+  # --------------------------------------------------
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
     home-manager = {
@@ -8,7 +10,9 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
-
+  # --------------------------------------------------
+  # use home-manager
+  # --------------------------------------------------
   outputs = { nixpkgs, home-manager, ... }: {
     homeConfigurations.headless = home-manager.lib.homeManagerConfiguration {
       pkgs = import nixpkgs { system = builtins.currentSystem; };

@@ -52,4 +52,4 @@ fi
 # --------------------------------------------------
 # exec
 # --------------------------------------------------
-exec zellij --new-session-with-layout "$LAYOUT" -s "aedit-$(basename "${AEDIT_FOLDER}")-$$" >/dev/null 2>&1
+exec zellij --new-session-with-layout "$LAYOUT" -s "aedit-$(basename "${AEDIT_FOLDER}")-$$"
