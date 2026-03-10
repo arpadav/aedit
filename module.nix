@@ -23,12 +23,12 @@ in
   options.programs.aedit = {
     enable = lib.mkEnableOption "aedit editor bundle";
     # --------------------------------------------------
-    # https://nix-community.github.io/home-manager/options.xhtml#opt-programs.helix.enable
+    # https://nix-community.github.io/home-manager/options.xhtml#opt-programs.helix.settings
     # --------------------------------------------------
     helixCfg = lib.mkOption {
       type = lib.types.nullOr lib.types.attrs;
       default = null;
-      description = "Additional `helix` settings";
+      description = "Additional `helix` config settings (config.toml)";
     };
     # --------------------------------------------------
     # https://docs.helix-editor.com/configuration.html
@@ -37,6 +37,22 @@ in
       type = lib.types.nullOr lib.types.attrs;
       default = null;
       description = "Path to Helix config file";
+    };
+    # --------------------------------------------------
+    # https://nix-community.github.io/home-manager/options.xhtml#opt-programs.helix.languages
+    # --------------------------------------------------
+    helixLang = lib.mkOption {
+      type = lib.types.nullOr lib.types.attrs;
+      default = null;
+      description = "Additional `helix` language settings (languages.toml)";
+    };
+    # --------------------------------------------------
+    # https://docs.helix-editor.com/languages.html
+    # --------------------------------------------------
+    helixLangFile = lib.mkOption {
+      type = lib.types.nullOr lib.types.attrs;
+      default = null;
+      description = "Path to Helix languages file";
     };
     # --------------------------------------------------
     # https://nix-community.github.io/home-manager/options.xhtml#opt-programs.broot.enable
@@ -65,13 +81,19 @@ in
         assertion = !(cfg.helixCfg != null && cfg.helixCfgFile != null);
         message = "programs.aedit: helixCfg and helixCfgFile are mutually exclusive.";
       }
+      {
+        assertion = !(cfg.helixLang != null && cfg.helixLangFile != null);
+        message = "programs.aedit: helixLang and helixLangFile are mutually exclusive.";
+      }
     ];
     # --------------------------------------------------
     # add user `helix` config
     # --------------------------------------------------
     programs.helix = {
       enable = true;
+      defaultEditor = true;
       settings = lib.mkIf (cfg.helixCfg != null) cfg.helixCfg;
+      languages = lib.mkIf (cfg.helixLang != null) cfg.helixLang;
     };
     # --------------------------------------------------
     # merge users `zellij` config to enable window split
@@ -117,6 +139,12 @@ in
 
     lib.optionalAttrs (cfg.helixCfgFile != null) {
       "helix/config.toml".source = cfg.helixCfgFile;
+    }
+
+    //
+
+    lib.optionalAttrs (cfg.helixLangFile != null) {
+      "helix/languages.toml".source = cfg.helixLangFile;
     }
 
     ;
