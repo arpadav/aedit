@@ -5,6 +5,8 @@
 #
 # Author: aav
 # --------------------------------------------------
+cd "${AEDIT_FOLDER:-.}"
+
 if [[ -n "${AEDIT_FILE:-}" && -f "${AEDIT_FILE}" ]]; then
     exec hx "${AEDIT_FILE}"
 else

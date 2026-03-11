@@ -2,8 +2,8 @@
 #
 # Called by broot's edit verb to open a file in the helix pane.
 #
-# $1 = absolute file path  (broot: {file})
-# $2 = line number          (broot: {line}, may be 0 or empty)
+# $1 = absolute file path    (broot: {file})
+# $2 = line number           (broot: {line}, may be 0 or empty)
 #
 # Author: aav
 # --------------------------------------------------

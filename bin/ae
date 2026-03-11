@@ -15,20 +15,11 @@ set -euo pipefail
 LAYOUT="${XDG_CONFIG_HOME:-$HOME/.config}/zellij/layouts/aedit.kdl"
 
 # --------------------------------------------------
-# check for the `aedit` layout
-# --------------------------------------------------
-if [[ ! -f "${LAYOUT}" ]]; then
-    echo "ae: layout not found at ${LAYOUT}" >&2
-    echo "    Ensure your nix/home-manager config provides zellijLayout." >&2
-    exit 1
-fi
-
-# --------------------------------------------------
 # input args
 # --------------------------------------------------
 case "${1:-}" in
     -h | --help)
-        echo "Usage: ae [PATH]"
+        echo "Usage: ae [PATH] - open a file or a directory"
         exit 0
         ;;
 esac
@@ -50,6 +41,23 @@ else
 fi
 
 # --------------------------------------------------
-# exec
+# select layout: focus helix when opening a file
 # --------------------------------------------------
-exec zellij --new-session-with-layout "$LAYOUT" -s "aedit-$(basename "${AEDIT_FOLDER}")-$$"
+if [[ -n "${AEDIT_FILE}" ]]; then
+    LAYOUT="${XDG_CONFIG_HOME:-$HOME/.config}/zellij/layouts/aedit-file.kdl"
+fi
+
+# --------------------------------------------------
+# check for the layout
+# --------------------------------------------------
+if [[ ! -f "${LAYOUT}" ]]; then
+    echo "ae: layout not found at ${LAYOUT}" >&2
+    echo "    Ensure your nix/home-manager config provides \`zellijLayout\`." >&2
+    exit 1
+fi
+
+# --------------------------------------------------
+# launch
+# --------------------------------------------------
+zellij --new-session-with-layout "$LAYOUT" -s "aedit-$(basename "${AEDIT_FOLDER}")-$$"
+clear
