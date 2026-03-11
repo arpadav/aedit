@@ -19,6 +19,11 @@ logbox() {
     local start=$((rows - h))
     local end=$((rows - 1))
     tput csr "$start" "$end"
+    local i
+    for i in $(seq "$start" "$end"); do
+        tput cup "$i" 0
+        tput el
+    done
     tput cup "$start" 0
     "$@"
     tput csr 0 $((rows - 1))
@@ -37,7 +42,7 @@ fi
 # --------------------------------------------------
 if ! command -v nix >/dev/null 2>&1; then
     step "Installing Nix"
-    logbox curl -L https://nixos.org/nix/install | sh -s -- --no-daemon --yes >/dev/null
+    logbox sh -c 'curl -L https://nixos.org/nix/install | sh -s -- --no-daemon --yes >/dev/null'
     . "$HOME/.nix-profile/etc/profile.d/nix.sh"
 fi
 

@@ -8,7 +8,7 @@ let
   # --------------------------------------------------
   # generated zellij layout with configurable pane sizes
   # --------------------------------------------------
-  generatedLayout = pkgs.writeText "aedit-layout.kdl" ''
+  layoutHeader = ''
     // aedit zellij layout
     //
     // WARNING: It is not recommended to replace this layout file directly.
@@ -24,13 +24,28 @@ let
     show_startup_tips false
     default_layout "compact"
     session_serialization false
+  '';
+  generatedLayout = pkgs.writeText "aedit-layout.kdl" ''
+    ${layoutHeader}
     layout {
         pane size=1 borderless=true {
             plugin location="zellij:tab-bar"
         }
         pane split_direction="vertical" {
-            pane size="${toString cfg.brootPaneSize}%" command="aedit-broot-start"
-            pane size="${toString cfg.helixPaneSize}%" command="aedit-hx-start"
+            pane size="${toString cfg.brootPaneSize}%" command="aedit-broot-start" name="broot"
+            pane size="${toString cfg.helixPaneSize}%" command="aedit-hx-start" name="hx"
+        }
+    }
+  '';
+  generatedFileLayout = pkgs.writeText "aedit-file-layout.kdl" ''
+    ${layoutHeader}
+    layout {
+        pane size=1 borderless=true {
+            plugin location="zellij:tab-bar"
+        }
+        pane split_direction="vertical" {
+            pane size="${toString cfg.brootPaneSize}%" command="aedit-broot-start" name="broot"
+            pane size="${toString cfg.helixPaneSize}%" command="aedit-hx-start" name="hx" focus=true
         }
     }
   '';
@@ -38,6 +53,7 @@ let
   # resolved layout: custom or generated
   # --------------------------------------------------
   resolvedLayout = if cfg.zellijLayout != null then cfg.zellijLayout else generatedLayout;
+  resolvedFileLayout = if cfg.zellijLayout != null then cfg.zellijLayout else generatedFileLayout;
   # --------------------------------------------------
   # aedit scripts package
   # --------------------------------------------------
@@ -228,6 +244,7 @@ in
 
       {
         "zellij/layouts/aedit.kdl".source = resolvedLayout;
+        "zellij/layouts/aedit-file.kdl".source = resolvedFileLayout;
       }
 
       //
