@@ -25,7 +25,7 @@ fi
 # --------------------------------------------------
 if ! command -v nix >/dev/null 2>&1; then
     step "Installing Nix"
-    sh -c 'curl -L https://nixos.org/nix/install | sh -s -- --no-daemon --yes >/dev/null'
+    curl -L https://nixos.org/nix/install | sh -s -- --no-daemon --yes >/dev/null
     . "$HOME/.nix-profile/etc/profile.d/nix.sh"
 fi
 
