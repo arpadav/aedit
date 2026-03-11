@@ -236,6 +236,18 @@ in
 
       //
 
+      lib.optionalAttrs (cfg.helixCfgFile != null) {
+        "helix/config.toml".source = cfg.helixCfgFile;
+      }
+
+      //
+
+      lib.optionalAttrs (cfg.helixLangFile != null) {
+        "helix/languages.toml".source = cfg.helixLangFile;
+      }
+
+      //
+
       lib.optionalAttrs (cfg.zellijCfgFile != null) {
         "zellij/config.kdl".source = cfg.zellijCfgFile;
       }
@@ -245,18 +257,6 @@ in
       {
         "zellij/layouts/aedit.kdl".source = resolvedLayout;
         "zellij/layouts/aedit-file.kdl".source = resolvedFileLayout;
-      }
-
-      //
-
-      lib.optionalAttrs (cfg.helixCfgFile != null) {
-        "helix/config.toml".source = cfg.helixCfgFile;
-      }
-
-      //
-
-      lib.optionalAttrs (cfg.helixLangFile != null) {
-        "helix/languages.toml".source = cfg.helixLangFile;
       }
 
       ;

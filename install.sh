@@ -10,24 +10,7 @@
 set -eu
 NIX_SH="$HOME/.nix-profile/etc/profile.d/nix.sh"
 step() {
-    printf "\t\033[1;34m=>\033[0m %s...\n" "$1"
-}
-logbox() {
-    local h=${LOGBOX_HEIGHT:-8}
-    tput sc
-    local rows=$(tput lines)
-    local start=$((rows - h))
-    local end=$((rows - 1))
-    tput csr "$start" "$end"
-    local i
-    for i in $(seq "$start" "$end"); do
-        tput cup "$i" 0
-        tput el
-    done
-    tput cup "$start" 0
-    "$@"
-    tput csr 0 $((rows - 1))
-    tput rc
+    printf "  \033[1;34m=>\033[0m %s...\n" "$1"
 }
 # --------------------------------------------------
 # source nix env if it exists but isn't on PATH
@@ -42,7 +25,7 @@ fi
 # --------------------------------------------------
 if ! command -v nix >/dev/null 2>&1; then
     step "Installing Nix"
-    logbox sh -c 'curl -L https://nixos.org/nix/install | sh -s -- --no-daemon --yes >/dev/null'
+    sh -c 'curl -L https://nixos.org/nix/install | sh -s -- --no-daemon --yes >/dev/null'
     . "$HOME/.nix-profile/etc/profile.d/nix.sh"
 fi
 
@@ -50,7 +33,7 @@ fi
 # install aedit
 # --------------------------------------------------
 step "Installing aedit..."
-logbox nix run home-manager/master -- switch \
+nix run home-manager/master -- switch \
     --flake "github:arpadav/aedit?ref=preparing-for-release&dir=headless#headless" \
     --impure \
     --no-write-lock-file \
@@ -67,4 +50,4 @@ broot --install 2>&1
 # done! print usage
 # --------------------------------------------------
 step "Done!"
-exec ae --help
+ae --help
