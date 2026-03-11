@@ -5,6 +5,7 @@
 #
 # Author: aav
 # --------------------------------------------------
-if [[ -f "${HOME}/.config/broot/launcher/bash/br" ]]; then
-    source "${HOME}/.config/broot/launcher/bash/br" && br "${AEDIT_FOLDER:-.}"
-fi
+broot "${AEDIT_FOLDER:-.}"
+# if [[ -f "${HOME}/.config/broot/launcher/bash/br" ]]; then
+#     source "${HOME}/.config/broot/launcher/bash/br" && br "${AEDIT_FOLDER:-.}"
+# fi
