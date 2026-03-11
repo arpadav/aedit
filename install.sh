@@ -15,6 +15,7 @@ step() {
 # --------------------------------------------------
 # source nix env if it exists but isn't on PATH
 # --------------------------------------------------
+step "Checking Nix"
 if ! command -v nix >/dev/null 2>&1; then
     if [ -f "$NIX_SH" ]; then
         . "$NIX_SH"
@@ -50,4 +51,4 @@ broot --install 2>&1
 # done! print usage
 # --------------------------------------------------
 step "Done!"
-ae --help
+echo $(ae --help)
